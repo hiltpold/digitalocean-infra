@@ -1,11 +1,11 @@
 resource "kubernetes_secret" "postgres_secret" {
   metadata {
-    name      = "mypostgres-secret"
+    name      = "postgres-secret"
     namespace = "default"
   }
   data = {
-    superUserPassword       = var.super_user_password
-    replicationUserPassword = var.replication_user_password
+    super_user_password       = var.super_user_password
+    replication_user_password = var.replication_user_password
   }
   type = "Opaque"
 }
