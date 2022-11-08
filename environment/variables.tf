@@ -3,6 +3,11 @@ variable "do_token" {
   type    = string
 }
 
+variable "region" {
+  default = ""
+  type    = string
+}
+
 variable "super_user_password" {
   default = ""
   type    = string
@@ -14,6 +19,11 @@ variable "replication_user_password" {
 }
 
 variable "manifest_pattern" {
+  default = ""
+  type    = string
+}
+
+variable "pgadmin_password" {
   default = ""
   type    = string
 }

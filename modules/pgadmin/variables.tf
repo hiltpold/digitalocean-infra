@@ -1,15 +1,10 @@
-variable "super_user_password" {
-  default = ""
-  type    = string
-}
-
-variable "replication_user_password" {
-  default = ""
-  type    = string
-}
-
 variable "manifest_pattern" {
   default = "./manifests/*.yaml"
+  type    = string
+}
+
+variable "pgadmin_password" {
+  default = ""
   type    = string
 }
 

@@ -1,6 +1,6 @@
 resource "digitalocean_kubernetes_cluster" "calypso" {
   name   = "calypso"
-  region = "fra1"
+  region = var.region
   # Grab the latest version slug from `doctl kubernetes options versions`
   version = "1.24.4-do.0"
 
