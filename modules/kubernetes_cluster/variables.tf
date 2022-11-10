@@ -7,3 +7,8 @@ variable "region" {
   default = ""
   type    = string
 }
+
+variable "vpc_id" {
+  default = ""
+  type    = string
+}

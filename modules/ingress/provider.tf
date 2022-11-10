@@ -30,7 +30,6 @@ provider "kubectl" {
 }
 
 provider "helm" {
-  #version = "~> 1.2"
   kubernetes {
     host                   = var.kubernetes_host
     token                  = var.kubernetes_token

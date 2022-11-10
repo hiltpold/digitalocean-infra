@@ -7,7 +7,7 @@ data:
    {
        "Servers": {
          "1": {
-           "Name": "Athena",
+           "Name": "athena",
            "Group": "Servers",
            "Port": 5432,
            "Username": "postgres",
@@ -29,7 +29,6 @@ spec:
    targetPort: http
  selector:
    app: pgadmin
- #type: NodePort
 ---
 apiVersion: apps/v1
 kind: StatefulSet

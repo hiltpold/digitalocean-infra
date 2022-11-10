@@ -21,3 +21,4 @@ resource "kubectl_manifest" "ingress" {
   for_each  = toset(data.kubectl_path_documents.docs.documents)
   yaml_body = each.value
 }
+
