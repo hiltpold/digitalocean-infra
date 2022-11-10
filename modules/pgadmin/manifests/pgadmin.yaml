@@ -7,7 +7,7 @@ data:
    {
        "Servers": {
          "1": {
-           "Name": "PostgreSQL",
+           "Name": "Athena",
            "Group": "Servers",
            "Port": 5432,
            "Username": "postgres",
@@ -29,7 +29,7 @@ spec:
    targetPort: http
  selector:
    app: pgadmin
- type: LoadBalancer
+ #type: NodePort
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -63,7 +63,7 @@ spec:
          imagePullPolicy: Always
          env:
          - name: PGADMIN_DEFAULT_EMAIL
-           value: user@domain.com
+           value: pg@admin.com
          - name: PGADMIN_DEFAULT_PASSWORD
            valueFrom:
              secretKeyRef:

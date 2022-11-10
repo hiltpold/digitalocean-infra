@@ -1,11 +1,11 @@
-resource "digitalocean_vpc" "k8s" {
-  name   = "calypso-vpc"
-  region = var.region
-
-  timeouts {
-    delete = "4m"
-  }
-}
+#resource "digitalocean_vpc" "k8s" {
+#  name   = "calypso-vpc"
+#  region = var.region
+#
+#  timeouts {
+#    delete = "4m"
+#  }
+#}
 
 module "kubernetes_cluster" {
   source   = "../modules/kubernetes_cluster"
@@ -27,6 +27,15 @@ module "pgadmin" {
   source                    = "../modules/pgadmin"
   manifest_pattern          = "../modules/pgadmin/manifests/*.yaml"
   pgadmin_password          = var.pgadmin_password
+  kubernetes_host           = module.kubernetes_cluster.kubernetes_host
+  kubernetes_token          = module.kubernetes_cluster.kubernetes_token
+  kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate
+}
+
+module "ingress" {
+  source                    = "../modules/ingress"
+  manifest_pattern          = "../modules/ingress/manifests/*.yaml"
+  value_file                = "../modules/ingress/conf/nginx-ingress-values.yaml"
   kubernetes_host           = module.kubernetes_cluster.kubernetes_host
   kubernetes_token          = module.kubernetes_cluster.kubernetes_token
   kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate

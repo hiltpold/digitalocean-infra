@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: calypso-ingress
+  annotations:
+    #nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+   - host: "pgadmin.defendersundressed.com"
+     http:
+        paths:
+          - path: /
+            pathType: "Prefix"
+            backend:
+              service:
+                name: pgadmin-service
+                port:
+                  number: 80
+  ingressClassName: nginx
