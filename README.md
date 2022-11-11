@@ -6,7 +6,7 @@ do_token                  =
 super_user_password       = 
 replication_user_password =
 ```
-# Misc
+## Misc
 Configure kubernetes cluster
 ```
 doctl kubernetes cluster kubeconfig save <cluster_name>
