@@ -6,7 +6,7 @@ resource "digitalocean_kubernetes_cluster" "dolos" {
 
   node_pool {
     name       = "worker-pool"
-    size       = "s-2vcpu-4gb"
+    size       = "s-2vcpu-2gb"
     node_count = 1
     auto_scale = false
   }

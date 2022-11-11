@@ -20,5 +20,5 @@ output "cluster_name" {
 
 output "worker_nodes" {
   description = "List of node pools containing the workers"
-  value       = flatten([for pool in digitalocean_kubernetes_cluster.dolos.node_pool : pool.nodes])
+  value       = tolist(flatten(digitalocean_kubernetes_cluster.dolos.node_pool.*.nodes))
 }

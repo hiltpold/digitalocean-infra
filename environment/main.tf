@@ -14,13 +14,11 @@ module "kubernetes_cluster" {
   vpc_id   = digitalocean_vpc.dolos_vpc.id
 
 }
-output "test" {
-  value = [module.kubernetes_cluster.worker_nodes[*].id]
-}
-resource "digitalocean_firewall" "kubernetes_firewall" {
-  name = "kubernetes_firewall"
 
-  droplet_ids = [module.kubernetes_cluster.worker_nodes[*].nodes[*].id]
+resource "digitalocean_firewall" "kubernetes_firewall" {
+  name = "kubernetes-firewall"
+
+  droplet_ids = module.kubernetes_cluster.worker_nodes.*.droplet_id
 
   inbound_rule {
     protocol         = "tcp"
