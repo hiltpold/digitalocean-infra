@@ -1,5 +1,5 @@
-resource "digitalocean_vpc" "dolos_vpc" {
-  name   = "dolos-vpc"
+resource "digitalocean_vpc" "project_vpc" {
+  name   = "${var.project_name}-vpc"
   region = var.region
 
   timeouts {
@@ -8,15 +8,16 @@ resource "digitalocean_vpc" "dolos_vpc" {
 }
 
 module "kubernetes_cluster" {
-  source   = "../modules/kubernetes_cluster"
-  do_token = var.do_token
-  region   = var.region
-  vpc_id   = digitalocean_vpc.dolos_vpc.id
-
+  source       = "../modules/kubernetes_cluster"
+  do_token     = var.do_token
+  region       = var.region
+  vpc_id       = digitalocean_vpc.project_vpc.id
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 resource "digitalocean_firewall" "kubernetes_firewall" {
-  name = "kubernetes-firewall"
+  name = "${var.project_name}-k8s-firewall"
 
   droplet_ids = module.kubernetes_cluster.worker_nodes.*.droplet_id
 
@@ -36,6 +37,8 @@ resource "digitalocean_firewall" "kubernetes_firewall" {
 module "kubgres" {
   source                    = "../modules/kubegres"
   manifest_pattern          = "../modules/kubegres/manifests/*.yaml"
+  project_name              = var.project_name
+  environment               = var.environment
   super_user_password       = var.super_user_password
   replication_user_password = var.replication_user_password
   kubernetes_host           = module.kubernetes_cluster.kubernetes_host
@@ -56,9 +59,25 @@ module "ingress" {
   source                    = "../modules/ingress"
   manifest_pattern          = "../modules/ingress/manifests/*.yaml"
   value_file                = "../modules/ingress/conf/nginx-ingress-values.yaml"
+  project_name              = var.project_name
+  environment               = var.environment
   kubernetes_cluster_name   = module.kubernetes_cluster.cluster_name
   kubernetes_worker_nodes   = module.kubernetes_cluster.worker_nodes
   kubernetes_host           = module.kubernetes_cluster.kubernetes_host
   kubernetes_token          = module.kubernetes_cluster.kubernetes_token
   kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate
+}
+resource "digitalocean_project" "project" {
+  name        = "${upper(substr(var.project_name, 0, 1))}${substr(var.project_name, 1, -1)}"
+  description = "A project to represent development resources."
+  purpose     = "All purpose project"
+  environment = var.environment == "prod" ? "Production" : "Development"
+  is_default  = true
+}
+
+resource "digitalocean_project_resources" "project_resources" {
+  project = digitalocean_project.project.id
+  resources = [
+    module.kubernetes_cluster.cluster_urn,
+  ]
 }

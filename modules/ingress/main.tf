@@ -5,7 +5,7 @@ resource "kubernetes_namespace" "ingress" {
 }
 
 resource "helm_release" "ingress-nginx" {
-  name = "ingress-nginx"
+  name = "${var.project_name}-helm-ingress-nginx"
 
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
@@ -17,8 +17,29 @@ resource "helm_release" "ingress-nginx" {
   depends_on = [kubernetes_namespace.ingress]
 }
 
-resource "kubectl_manifest" "ingress" {
-  for_each  = toset(data.kubectl_path_documents.docs.documents)
-  yaml_body = each.value
+resource "kubernetes_ingress_v1" "nginx_ingress" {
+  metadata {
+    name = "nginx-ingress"
+    annotations = {
+      #nginx.ingress.kubernetes.io/rewrite-target: /$2
+    }
+  }
+  spec {
+    rule {
+      http {
+        path {
+          path = "/"
+          backend {
+            service {
+              name = "pgadmin-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+    ingress_class_name = "nginx"
+  }
 }
-

@@ -1,5 +1,5 @@
-resource "digitalocean_kubernetes_cluster" "dolos" {
-  name     = "dolos"
+resource "digitalocean_kubernetes_cluster" "k8s" {
+  name     = "${var.project_name}-k8s"
   region   = var.region
   version  = data.digitalocean_kubernetes_versions.version.latest_version
   vpc_uuid = var.vpc_id

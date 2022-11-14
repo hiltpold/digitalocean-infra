@@ -1,3 +1,18 @@
+variable "project_name" {
+  default = ""
+  type    = string
+}
+
+variable "environment" {
+  default = "dev"
+  type    = string
+
+  validation {
+    condition     = contains(["dev", "test", "prod"], var.environment)
+    error_message = "Allowed values for input_parameter are \"dev\", \"test\", or \"prod\"."
+  }
+}
+
 variable "super_user_password" {
   default = ""
   type    = string
