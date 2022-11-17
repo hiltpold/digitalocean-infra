@@ -16,6 +16,7 @@ resource "digitalocean_vpc" "project_vpc" {
 module "kubernetes_cluster" {
   source       = "../modules/kubernetes_cluster"
   do_token     = var.do_token
+  owner        = var.owner
   region       = var.region
   vpc_id       = digitalocean_vpc.project_vpc.id
   project_name = var.project_name
@@ -69,6 +70,13 @@ module "ingress" {
   environment               = var.environment
   kubernetes_cluster_name   = module.kubernetes_cluster.cluster_name
   kubernetes_worker_nodes   = module.kubernetes_cluster.worker_nodes
+  kubernetes_host           = module.kubernetes_cluster.kubernetes_host
+  kubernetes_token          = module.kubernetes_cluster.kubernetes_token
+  kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate
+}
+
+module "lakelandcup" {
+  source                    = "../modules/lakelandcup"
   kubernetes_host           = module.kubernetes_cluster.kubernetes_host
   kubernetes_token          = module.kubernetes_cluster.kubernetes_token
   kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate

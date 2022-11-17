@@ -26,6 +26,22 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
   }
   spec {
     rule {
+      host = "hiltpold.tech"
+      http {
+        path {
+          path = "/"
+          backend {
+            service {
+              name = "lakelandcup-ui-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+    rule {
       host = "pgadmin.hiltpold.tech"
       http {
         path {
