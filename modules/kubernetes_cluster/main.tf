@@ -12,11 +12,11 @@ resource "digitalocean_kubernetes_cluster" "k8s" {
   }
 }
 
-/*
 resource "digitalocean_container_registry_docker_credentials" "docker_registry_ca" {
   registry_name = var.owner
 }
 
+/*
 resource "kubernetes_secret" "docker_secret" {
   metadata {
     name = "docker-cfg"

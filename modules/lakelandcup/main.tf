@@ -138,3 +138,75 @@ resource "kubernetes_service" "lakelandcup-api-gateway-service" {
     }
   }
 }
+
+/*
+    Lakelandcup Gateway
+*/
+
+resource "kubernetes_deployment" "lakelandcup-auth-service" {
+  metadata {
+    name = "lakelandcup-auth-service"
+    labels = {
+      app = "lakelandcup-auth-service"
+    }
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "lakelandcup-auth-service"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "lakelandcup-auth-service"
+        }
+      }
+
+      spec {
+        container {
+          image = "registry.digitalocean.com/hiltpold/lakelandcup/lakelandcup-auth-service:latest"
+          name  = "lakelandcup-auth-service"
+
+          port {
+            container_port = 50010
+          }
+
+          liveness_probe {
+            http_get {
+              path = "/"
+              port = 80
+
+              http_header {
+                name  = "X-Custom-Header"
+                value = "Awesome"
+              }
+            }
+
+            initial_delay_seconds = 3
+            period_seconds        = 3
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "lakelandcup-api-gateway-service" {
+  metadata {
+    name = "lakelandcup-api-gateway-service"
+  }
+  spec {
+    selector = {
+      app = "lakelandcup-api-gateway"
+    }
+    port {
+      port        = 50010
+      target_port = 50010
+    }
+  }
+}
