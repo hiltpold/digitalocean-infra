@@ -8,6 +8,10 @@ spec:
    image: postgres:15.0
    database:
       size: 256Mi
+   backup:
+     schedule: "0 */1 * * *"
+     pvcName: postgres-backup-pvc
+     volumeMount: /var/lib/backup
    env:
       - name: POSTGRES_PASSWORD
         valueFrom:

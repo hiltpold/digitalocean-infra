@@ -26,6 +26,7 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
   }
   spec {
     rule {
+      host = "pgadmin.hiltpold.tech"
       http {
         path {
           path = "/"

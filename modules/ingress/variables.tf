@@ -24,7 +24,7 @@ variable "environment" {
 }
 
 variable "kubernetes_cluster_name" {
-  default = "dolos"
+  default = ""
   type    = string
 }
 

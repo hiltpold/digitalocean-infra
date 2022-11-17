@@ -1,3 +1,9 @@
+resource "digitalocean_container_registry" "docker_registry" {
+  name                   = var.owner
+  subscription_tier_slug = "basic"
+  region                 = var.region
+}
+
 resource "digitalocean_vpc" "project_vpc" {
   name   = "${var.project_name}-vpc"
   region = var.region
@@ -19,7 +25,7 @@ module "kubernetes_cluster" {
 resource "digitalocean_firewall" "kubernetes_firewall" {
   name = "${var.project_name}-k8s-firewall"
 
-  droplet_ids = module.kubernetes_cluster.worker_nodes.*.droplet_id
+  droplet_ids = [module.kubernetes_cluster.worker_nodes.*.droplet_id[0]]
 
   inbound_rule {
     protocol         = "tcp"
@@ -67,17 +73,28 @@ module "ingress" {
   kubernetes_token          = module.kubernetes_cluster.kubernetes_token
   kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate
 }
+
+resource "digitalocean_domain" "project_www_domain" {
+  name = "www.hiltpold.tech"
+}
+
+resource "digitalocean_domain" "project_domain" {
+  name = "hiltpold.tech"
+}
+
 resource "digitalocean_project" "project" {
   name        = "${upper(substr(var.project_name, 0, 1))}${substr(var.project_name, 1, -1)}"
   description = "A project to represent development resources."
   purpose     = "All purpose project"
   environment = var.environment == "prod" ? "Production" : "Development"
-  is_default  = true
+  is_default  = false
 }
 
 resource "digitalocean_project_resources" "project_resources" {
   project = digitalocean_project.project.id
   resources = [
     module.kubernetes_cluster.cluster_urn,
+    digitalocean_domain.project_www_domain.urn,
+    digitalocean_domain.project_domain.urn
   ]
 }
