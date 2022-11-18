@@ -1,8 +1,10 @@
+/*
 resource "digitalocean_container_registry" "docker_registry" {
   name                   = var.owner
   subscription_tier_slug = "basic"
   region                 = var.region
 }
+*/
 
 resource "digitalocean_vpc" "project_vpc" {
   name   = "${var.project_name}-vpc"

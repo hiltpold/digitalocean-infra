@@ -104,10 +104,11 @@ resource "kubernetes_deployment" "lakelandcup-api-gateway" {
           port {
             container_port = 50000
           }
+          /*
           liveness_probe {
             http_get {
               path = "/"
-              port = 80
+              port = 50000
 
               http_header {
                 name  = "X-Custom-Header"
@@ -118,6 +119,7 @@ resource "kubernetes_deployment" "lakelandcup-api-gateway" {
             initial_delay_seconds = 3
             period_seconds        = 3
           }
+          */
         }
       }
     }
@@ -140,14 +142,14 @@ resource "kubernetes_service" "lakelandcup-api-gateway-service" {
 }
 
 /*
-    Lakelandcup Gateway
+    Lakelandcup API Gateway
 */
 
-resource "kubernetes_deployment" "lakelandcup-auth-service" {
+resource "kubernetes_deployment" "lakelandcup-auth" {
   metadata {
-    name = "lakelandcup-auth-service"
+    name = "lakelandcup-auth"
     labels = {
-      app = "lakelandcup-auth-service"
+      app = "lakelandcup-auth"
     }
   }
 
@@ -156,14 +158,14 @@ resource "kubernetes_deployment" "lakelandcup-auth-service" {
 
     selector {
       match_labels = {
-        app = "lakelandcup-auth-service"
+        app = "lakelandcup-auth"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "lakelandcup-auth-service"
+          app = "lakelandcup-auth"
         }
       }
 
@@ -175,11 +177,11 @@ resource "kubernetes_deployment" "lakelandcup-auth-service" {
           port {
             container_port = 50010
           }
-
+          /*
           liveness_probe {
             http_get {
               path = "/"
-              port = 80
+              port = 50010
 
               http_header {
                 name  = "X-Custom-Header"
@@ -190,19 +192,20 @@ resource "kubernetes_deployment" "lakelandcup-auth-service" {
             initial_delay_seconds = 3
             period_seconds        = 3
           }
+          */
         }
       }
     }
   }
 }
 
-resource "kubernetes_service" "lakelandcup-api-gateway-service" {
+resource "kubernetes_service" "lakelandcup-auth-service" {
   metadata {
-    name = "lakelandcup-api-gateway-service"
+    name = "lakelandcup-auth-service"
   }
   spec {
     selector = {
-      app = "lakelandcup-api-gateway"
+      app = "lakelandcup-auth"
     }
     port {
       port        = 50010

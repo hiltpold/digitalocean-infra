@@ -39,6 +39,17 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
             }
           }
         }
+        path {
+          path = "/v1/"
+          backend {
+            service {
+              name = "lakelandcup-api-gateway-service"
+              port {
+                number = 50000
+              }
+            }
+          }
+        }
       }
     }
     rule {
