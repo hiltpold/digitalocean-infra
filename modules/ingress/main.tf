@@ -21,6 +21,8 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
   metadata {
     name = "nginx-ingress"
     annotations = {
+      #"cert-manager.io/cluster-issuer" = "letsencrypt-staging"
+      "cert-manager.io/cluster-issuer" = "letsencrypt-production"
       #nginx.ingress.kubernetes.io/rewrite-target: /$2
     }
   }
@@ -67,6 +69,10 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
           }
         }
       }
+    }
+    tls {
+      hosts       = ["hiltpold.tech", "pgadmin.hiltpold.tech"]
+      secret_name = "hiltpold-tech-tls-secret"
     }
     ingress_class_name = "nginx"
   }

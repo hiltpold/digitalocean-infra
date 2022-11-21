@@ -69,6 +69,7 @@ module "ingress" {
   manifest_pattern          = "../modules/ingress/manifests/*.yaml"
   value_file                = "../modules/ingress/conf/nginx-ingress-values.yaml"
   project_name              = var.project_name
+  letsencrypt_email         = var.letsencrypt_email
   environment               = var.environment
   kubernetes_cluster_name   = module.kubernetes_cluster.cluster_name
   kubernetes_worker_nodes   = module.kubernetes_cluster.worker_nodes
@@ -83,6 +84,27 @@ module "lakelandcup" {
   kubernetes_token          = module.kubernetes_cluster.kubernetes_token
   kubernetes_ca_certificate = module.kubernetes_cluster.kubernetes_ca_certificate
 }
+
+/*
+    Letsencrypt
+*/
+
+module "letsencrypt" {
+  source                      = "../modules/letsencrypt"
+  letsencrypt_issuer_template = "../modules/letsencrypt/conf/letsencript-issuer.templ.yaml"
+  letsencrypt_email           = var.letsencrypt_email
+  project_name                = var.project_name
+  environment                 = var.environment
+  kubernetes_cluster_name     = module.kubernetes_cluster.cluster_name
+  kubernetes_worker_nodes     = module.kubernetes_cluster.worker_nodes
+  kubernetes_host             = module.kubernetes_cluster.kubernetes_host
+  kubernetes_token            = module.kubernetes_cluster.kubernetes_token
+  kubernetes_ca_certificate   = module.kubernetes_cluster.kubernetes_ca_certificate
+}
+
+/*
+    Domains
+*/
 
 resource "digitalocean_domain" "project_www_domain" {
   name = "www.hiltpold.tech"

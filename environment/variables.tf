@@ -3,6 +3,11 @@ variable "do_token" {
   type    = string
 }
 
+variable "letsencrypt_email" {
+  default = ""
+  type    = string
+}
+
 variable "owner" {
   default = ""
   type    = string

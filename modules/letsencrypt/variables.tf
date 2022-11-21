@@ -1,13 +1,3 @@
-variable "manifest_pattern" {
-  default = "./manifests/*.yaml"
-  type    = string
-}
-
-variable "value_file" {
-  default = "./manifests/ingress.yaml"
-  type    = string
-}
-
 variable "project_name" {
   default = ""
   type    = string
@@ -15,6 +5,16 @@ variable "project_name" {
 
 variable "letsencrypt_email" {
   default = ""
+  type    = string
+}
+
+variable "letsencrypt_issuer_template" {
+  default = "./conf/letsencript-issuer.yaml"
+  type    = string
+}
+
+variable "server_values" {
+  default = "./conf/metrics-server-values.yaml"
   type    = string
 }
 
